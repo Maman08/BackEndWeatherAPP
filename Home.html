@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<style>
+   body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.box {
+    position: relative;
+    height: 20rem;
+    width: 300px;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    justify-content: center;
+}
+
+.wave-one, .wave-two, .wave-three {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-color: #eccc68;
+    margin: auto;
+}
+
+.wave-two {
+    background-color: #ffb142;
+    height: 15px;
+}
+
+.wave-three {
+    background-color: #ff793f;
+    height: 10px;
+}
+
+#weathercon {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 40px;
+}
+
+.info {
+    text-align: center;
+}
+
+.location {
+    margin-bottom: 10px;
+    color: #eccc68;
+}
+
+.temp {
+    font-size: 36px;
+    color: #333;
+    margin: 0;
+}
+
+.tempmin_max {
+    font-size: 14px;
+    color: #777;
+    margin: 5px 0;
+}
+
+.fa-street-view, .fa-sun {
+    margin-right: 5px;
+}
+.search{
+    
+    margin:  auto 30px;
+   
+}
+#search-box{
+    margin-bottom: 15px;
+
+}
+ 
+#input{ 
+    padding: 5px;
+    border-radius: 5px;
+    background-color:rgb(223, 231, 238);
+    outline: none;
+    border: none;
+}
+#btn{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #eccc68;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+</style>
+<body>
+    <div class="box">
+        
+
+        <div id="weathercon">
+            <i class="fa-solid fa-sun " style="color: #eccc68; "></i>
+        </div>
+
+ 
+        <div class="info">
+          <h2 class="location" ><i class="fa-solid fa-street-view" style="color: #eccc68;"></i> {%location%},{%country%}</h2>
+          <p id="date"> WED | OCT 23 | 10:49AM</p>
+          <h1 class="temp">{%tempval%} &deg;C
+        </h1>
+          <h3 class="tempmin_max">Min {%mintempval%}&deg;C
+            | Max {%maxtempval}&deg;C
+        </h3>
+        </div>
+        
+        <div >
+            <div class="wave-one"></div>
+        <div class="wave-two"></div>
+        <div class="wave-three"></div>
+        </div>
+
+    </div>
+
+
+<script>
+
+    
+    const tempStatus="{%tempStatus%}";
+let weathercon=document.getElementById("weathercon");
+if(tempStatus==="Sunny"){
+weathercon.innerHTML="<i class='fas  fa-sun '' style='color: #eccc68;''></i>"
+}
+else if(tempStatus==="Clouds"){
+weathercon.innerHTML="<i class='fa fa-cloud '' style='color: #dfe4ea;''></i>"
+}
+else if(tempStatus==="Rainy"){
+weathercon.innerHTML="<i class='fas fa-cloud-rain '' style='color: #a4b0be;''></i>"
+}
+else {
+weathercon.innerHTML="<i class='fas fa-cloud '' style='color: #44c3d3;''></i>"
+}
+// date time
+    const date=document.getElementById("date");
+   let todaysDay=()=>{
+    let currentDay=new Date();
+    console.log(currentDay);
+    let days=new Array("SUN","MON","TUE","WED","THU","FRI","SAT");
+
+    console.log(days[currentDay.getDay()]);
+    return days[currentDay.getDay()];
+   }
+   todaysDay();
+
+   let todaysDate=()=>{
+    let currentDate=new Date();
+    let months= new Array("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC");
+    let date=currentDate.getDate();
+    let month=months[currentDate.getMonth()];
+    if(date<10){
+        date="0"+date;
+    }
+    console.log(date);
+    console.log(months[month]);
+    console.log(currentDate.getFullYear())
+    let Hourtime=currentDate.getHours();
+    let Mintime=currentDate.getMinutes();
+    let ampm="AM";
+    if(Hourtime>11){
+        ampm="PM";
+        Hourtime=Hourtime-12;
+    }
+     
+    return `${month} ${currentDate.getFullYear()%100} | ${Hourtime}:${Mintime}${ampm}`
+   }
+   todaysDate();
+
+date.innerHTML=`${todaysDay()} | ${todaysDate()}`
+
+// date time over
+})
+
+
+
+
+
+</script>
+    
+
+<script>
+    function searchWeather() {
+  const searchTerm = document.getElementById("input").value;
+
+  // Replace "edda7f49d17e416522f7ef10a3a2a63f" with your own API key
+  const url = ("https://api.openweathermap.org/data/2.5/weather?q=bengaluru&units=metric&appid=edda7f49d17e416522f7ef10a3a2a63f")
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if (data.cod === "200") {
+        const realTimeData = replaceVal(homefile, data);
+        res.write(realTimeData);
+        res.end();
+      } else {
+        // Handle errors (e.g., city not found)
+        console.error("Error", data.message);
+        res.end("Error: City not found");
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching weather data", error);
+      res.end("Error: Failed to fetch weather data");
+    });
+}
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
